@@ -1,0 +1,34 @@
+.header {
+    color: rgb(183, 171, 41);
+    background-color: rgb(82, 87, 85);
+    font-size: 20px;
+}
+
+.container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: flex-start;
+    margin-left: 11px;
+    margin-right: 11px;
+    margin-top: 11px;
+    margin-bottom: 11px;
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+.toggle {
+}
+
+.toggle:checked {
+    opacity: 0.5;
+}
+
+.parent {
+    flex-grow: 1;
+    flex-direction: row;
+    flex-wrap: wrap;
+}

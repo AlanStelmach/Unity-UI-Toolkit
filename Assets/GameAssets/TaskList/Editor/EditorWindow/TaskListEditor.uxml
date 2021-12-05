@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/GameAssets/TaskList/Editor/EditorWindow/TaskListEditor.uss?fileID=7433441132597879392&amp;guid=34fb9c1155373d843aec88dc791fe6af&amp;type=3#TaskListEditor" />
+    <ui:VisualElement name="AddingTasks">
+        <ui:TextField picking-mode="Ignore" label="Text Field" value="filler text" text="filler text" name="taskText" style="height: 18px;" />
+        <ui:Button text="Button" display-tooltip-when-elided="true" name="addTaskButton" />
+    </ui:VisualElement>
+    <ui:VisualElement name="DisplayingTasks">
+        <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" name="taskList" />
+    </ui:VisualElement>
+</ui:UXML>
