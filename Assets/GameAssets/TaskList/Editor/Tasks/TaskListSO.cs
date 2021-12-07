@@ -14,7 +14,12 @@ namespace GameAssets.Tasks
             return tasks;
         }
 
-        public void Save(List<string> savedTasks) // Save method
+        public void AddTask(string savedTask)
+        {
+            tasks.Add(savedTask);
+        }
+
+        public void AddTasks(List<string> savedTasks) // Save method
         {
             tasks.Clear();
             tasks = savedTasks;
