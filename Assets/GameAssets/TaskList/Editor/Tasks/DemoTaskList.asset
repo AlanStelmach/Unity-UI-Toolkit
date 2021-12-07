@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tasks:
   - Add a task
-  - Save & Load tasks
-  - Complete tasks
-  - Searching for tasks
   - Track progress
+  - Test
+  - 123

@@ -92,3 +92,7 @@
     margin-bottom: 10px;
     margin-top: 10px;
 }
+
+.highlight {
+    color: rgba(229, 217, 33, 255);
+}

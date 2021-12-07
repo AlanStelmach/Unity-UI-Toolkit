@@ -17,6 +17,9 @@ namespace GameAssets.Tasks
         Button loadSavedTasks;
         TaskListSO taskListSO;
         Button saveProgressButton;
+        ProgressBar taskProgressBar;
+        ToolbarSearchField toolbarSearchField;
+        Label notification;
 
         public const string path = "Assets/GameAssets/TaskList/Editor/EditorWindow/";
         [MenuItem("GameAssets/Task List")]
@@ -30,7 +33,7 @@ namespace GameAssets.Tasks
 
         public void CreateGUI()
         {
-            container = rootVisualElement;
+            container = rootVisualElement; // Root element of GUI
 
             VisualTreeAsset visualTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(path + "TaskListEditor.uxml");
             container.Add(visualTreeAsset.Instantiate()); // Adding uxml template
@@ -44,6 +47,9 @@ namespace GameAssets.Tasks
             savedTasksObjectField = container.Q<ObjectField>("savedTasksObjectField");
             loadSavedTasks = container.Q<Button>("loadTasksButton");
             saveProgressButton = container.Q<Button>("saveProgressButton");
+            taskProgressBar = container.Q<ProgressBar>("taskProgressBar");
+            toolbarSearchField = container.Q<ToolbarSearchField>("searchBox");
+            notification = container.Q<Label>("notification");
 
             // Debug.Log(taskText); // Logs
             // Debug.Log(addTaskButton);
@@ -54,6 +60,9 @@ namespace GameAssets.Tasks
             loadSavedTasks.clicked += LoadTasks;
             savedTasksObjectField.objectType = typeof(TaskListSO); // Setting object type of TaskListSO
             saveProgressButton.clicked += SaveProgress;
+            toolbarSearchField.RegisterValueChangedCallback(OnSearchTextCahnged);
+
+            UpdateNotifications("Please load a task list.");
         }
 
         void AddTask() // Adding method
@@ -65,13 +74,16 @@ namespace GameAssets.Tasks
                 SaveTask(taskText.value);
                 taskText.value = "";
                 taskText.Focus();
+                UpdateProgress();
+                UpdateNotifications("Task added!");
             }
         }
 
-        Toggle CreateToggle(string value)
+        TaskItem CreateToggle(string value) // Creating element of task list
         {
-            Toggle taskItem = new Toggle();
-            taskItem.text = value;
+            TaskItem taskItem = new TaskItem(value);
+            taskItem.GetTaskLabel().text = value;
+            taskItem.GetTaskToggle().RegisterValueChangedCallback(UpdateProgress);
             return taskItem;
         }
 
@@ -83,7 +95,7 @@ namespace GameAssets.Tasks
             }
         }
 
-        void LoadTasks()
+        void LoadTasks() // Loading tasks as a element of TaskListSO type
         {
             taskListSO = savedTasksObjectField.value as TaskListSO;
 
@@ -93,13 +105,19 @@ namespace GameAssets.Tasks
                 List<string> tasks = taskListSO.GetTasks();
                 foreach (string task in tasks)
                 {
-                    Toggle taskToggle = CreateToggle(task);
+                    TaskItem taskToggle = CreateToggle(task);
                     taskListScrollView.Add(taskToggle);
                 }
+                UpdateProgress();
+                UpdateNotifications("Task list loaded " + taskListSO.name);
             }
+            else
+            {
+                UpdateNotifications("Failed to load!");
+            }    
         }
 
-        void SaveTask(string saveTask)
+        void SaveTask(string saveTask) // Saving task
         {
             taskListSO.AddTask(saveTask);
             EditorUtility.SetDirty(taskListSO);
@@ -107,16 +125,16 @@ namespace GameAssets.Tasks
             AssetDatabase.Refresh();
         }
 
-        void SaveProgress()
+        void SaveProgress() // Saving progress after completing the task
         {
             if (taskListSO != null)
             {
                 List<string> tasks = new List<string>();
-                foreach(Toggle task in taskListScrollView.Children())
+                foreach(TaskItem task in taskListScrollView.Children())
                 {
-                    if(!task.value)
+                    if(!task.GetTaskToggle().value)
                     {
-                        tasks.Add(task.text);
+                        tasks.Add(task.GetTaskLabel().text);
                     }
                 }
 
@@ -125,6 +143,66 @@ namespace GameAssets.Tasks
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
                 LoadTasks();
+                UpdateNotifications("Tasks saved.");
+            }
+        }
+
+        void UpdateProgress()
+        {
+            int count = 0;
+            int completed = 0;
+
+            foreach(TaskItem task in taskListScrollView.Children())
+            {
+                if(task.GetTaskToggle().value)
+                {
+                    completed++;
+                }
+                count++;
+            }
+
+            if(count > 0)
+            {
+                float progress = completed / (float)count;
+                taskProgressBar.value = progress;
+                taskProgressBar.title = string.Format("{0} %", Mathf.Round(progress * 1000) / 10f);
+                UpdateNotifications("Progress updated! Please save.");
+            }
+            else
+            {
+                taskProgressBar.value = 1;
+                taskProgressBar.title = string.Format("{0} %", 100);
+            }
+        }
+
+        void UpdateProgress(ChangeEvent<bool> e)
+        {
+            UpdateProgress();
+        }
+
+        void OnSearchTextCahnged(ChangeEvent<string> e)
+        {
+            string searchText = e.newValue.ToUpper();
+            foreach(TaskItem task in taskListScrollView.Children())
+            {
+                string taskText = task.GetTaskLabel().text.ToUpper();
+
+                if(!string.IsNullOrEmpty(searchText) && taskText.Contains(searchText))
+                {
+                    task.GetTaskLabel().AddToClassList("highlight");
+                }
+                else
+                {
+                    task.GetTaskLabel().RemoveFromClassList("highlight");
+                }    
+            }
+        }
+
+        void UpdateNotifications(string text)
+        {
+            if(!string.IsNullOrEmpty(text))
+            {
+                notification.text = text;
             }
         }
     }

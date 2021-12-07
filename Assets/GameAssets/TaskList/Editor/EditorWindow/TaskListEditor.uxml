@@ -1,22 +1,29 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
     <Style src="project://database/Assets/GameAssets/TaskList/Editor/EditorWindow/TaskListEditor.uss?fileID=7433441132597879392&amp;guid=34fb9c1155373d843aec88dc791fe6af&amp;type=3#TaskListEditor" />
-    <ui:Label text="Load Tasks" display-tooltip-when-elided="true" class="header" />
+    <ui:Label text="Load Tasks" display-tooltip-when-elided="true" name="loadingHeader" class="header" />
     <ui:VisualElement name="LoadingTasks" class="container">
         <uie:ObjectField label="Load Saved Tasks" name="savedTasksObjectField" />
         <ui:Button text="Load Tasks" display-tooltip-when-elided="true" name="loadTasksButton" class="button" />
     </ui:VisualElement>
+    <ui:Label text="Search Box" display-tooltip-when-elided="true" name="searchingHeader" class="header" />
+    <ui:VisualElement name="SearchingTasks" class="container">
+        <uie:ToolbarSearchField focusable="true" name="searchBox" style="flex-direction: row; flex-shrink: 0; width: 90%; left: 20px;" />
+    </ui:VisualElement>
+    <ui:Label text="Add New Task" display-tooltip-when-elided="true" name="addTasksHeader" class="header" />
     <ui:VisualElement name="AddingTasks" class="container-alt">
         <ui:TextField picking-mode="Ignore" text="New Task..." name="taskText" class="textbox" style="height: 18px;" />
         <ui:Button text="Add" display-tooltip-when-elided="true" name="addTaskButton" class="smallbutton" />
     </ui:VisualElement>
+    <ui:Label text="List of Tasks" display-tooltip-when-elided="true" name="taskListHeader" class="header" />
     <ui:VisualElement name="DisplayingTasks" class="container">
         <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" name="taskList" class="list" />
     </ui:VisualElement>
-    <ui:Label text="List of Tasks" display-tooltip-when-elided="true" name="taskListHeader" class="header" />
+    <ui:Label text="Current Progress" display-tooltip-when-elided="true" name="progressBarHeader" class="header" />
     <ui:VisualElement name="TrackingTasks" class="container">
         <ui:ProgressBar title="---%" name="taskProgressBar" high-value="1" />
         <ui:Button text="Save Progress" display-tooltip-when-elided="true" name="saveProgressButton" class="button" />
     </ui:VisualElement>
-    <ui:Label text="Current Progress" display-tooltip-when-elided="true" name="progressBarHeader" class="header" />
-    <ui:Label text="Add New Task" display-tooltip-when-elided="true" name="addTasksHeader" class="header" />
+    <ui:VisualElement name="NotificationBox" class="container list">
+        <ui:Label display-tooltip-when-elided="true" name="notification" class="header" />
+    </ui:VisualElement>
 </ui:UXML>
